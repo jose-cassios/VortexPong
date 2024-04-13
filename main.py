@@ -1,13 +1,20 @@
 import pygame
 from pygame.locals import *
-from sys import *
-import random
+from sys import exit
+import os
 
 pygame.init()
 pygame.font.init()
-pygame.mixer.init()
+pygame.mixer.init() 
 
-pygame.mixer.music.load("/home/cassios/Code/Python_Projects/Games/PingPong/music/flowermusic.mp3");
+
+# Implementing directory management with the OS library
+
+mainDirectory = os.path.dirname(__file__)
+musicDirectory = os.path.join(mainDirectory, 'Sounds/music')
+fontsDirectory = os.path.join(mainDirectory, 'fonts')
+
+pygame.mixer.music.load(os.path.join(musicDirectory, 'flowermusic.mp3'))
 
 width = 640
 height = 480
@@ -28,10 +35,9 @@ clock = pygame.time.Clock();
 
 scorePlayer1 = 0
 scorePlayer2 = 0
-font_path = '/home/cassios/Code/Python_Projects/Games/PingPong/fonts/ka1.ttf'
+font_path = os.path.join(fontsDirectory, 'ka1.ttf')
 font_size = 25
 custom_font = pygame.font.Font(font_path, font_size)
-""" vel = random.random() """
 pygame.mixer.music.play()
 
 while True:
@@ -92,8 +98,8 @@ while True:
     if bola.colliderect(player1) or bola.colliderect(player2):
         Vxbola = -Vxbola
         
-    Xbola += Vxbola;
-    Ybola += Vybola;
+    Xbola += Vxbola
+    Ybola += Vybola
     
     
     screen.blit(text1, [20, 40])
