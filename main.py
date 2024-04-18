@@ -7,101 +7,100 @@ pygame.init()
 pygame.font.init()
 pygame.mixer.init() 
 
-
-# Implementing directory management with the OS library
-
 mainDirectory = os.path.dirname(__file__)
 musicDirectory = os.path.join(mainDirectory, 'Sounds/music')
 fontsDirectory = os.path.join(mainDirectory, 'fonts')
 
 pygame.mixer.music.load(os.path.join(musicDirectory, 'flowermusic.mp3'))
+pygame.mixer.music.play()
 
-width = 640
-height = 480
+screenWidth = 640
+screenHeight = 480
 
-Player1Y = (height/2) - 35
-Player2Y = (height/2) - 35
+player1PosY = (screenHeight/2) - 35
+player2PosY = (screenHeight/2) - 35
 
-Player1X = 40
+playerPos1X = 40
 
-Xbola = width/2
-Ybola = height/2
+ballPosX = screenWidth/2
+ballPosY = screenHeight/2
 
-Vybola = 6
-Vxbola = 6
-screen = pygame.display.set_mode((width, height), RESIZABLE)
+ballSpeedY = 6
+ballSpeedX = 6
+
+screen = pygame.display.set_mode((screenWidth, screenHeight), RESIZABLE)
 
 clock = pygame.time.Clock();
 
 scorePlayer1 = 0
 scorePlayer2 = 0
-font_path = os.path.join(fontsDirectory, 'ka1.ttf')
-font_size = 25
-custom_font = pygame.font.Font(font_path, font_size)
-pygame.mixer.music.play()
+
+fontPath = os.path.join(fontsDirectory, 'ka1.ttf')
+fontSize = 25
+customFont = pygame.font.Font(fontPath, fontSize)
 
 while True:
     msg1 = f"Blue {scorePlayer1}"
     msg2 = f"Red: {scorePlayer2}"
-    text1 = custom_font.render(msg1, True, (0, 0, 0))
-    text2 = custom_font.render(msg2, True, (0, 0, 0))
+    text1 = customFont.render(msg1, True, (0, 0, 0))
+    text2 = customFont.render(msg2, True, (0, 0, 0))
     
     clock.tick(60)
     screen.fill((0, 0, 0))
+    
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             exit()
         
-    if pygame.key.get_pressed()[K_w] and Player1Y > 31:
-        Player1Y -= 8
-    if pygame.key.get_pressed()[K_s] and Player1Y < 380:
-        Player1Y += 8
-    if pygame.key.get_pressed()[K_a] and Player1X > 31:
-        Player1X-= 8
-    if pygame.key.get_pressed()[K_d] and Player1X < 600:
-        Player1X += 8
+    if pygame.key.get_pressed()[K_w] and player1PosY > 31:
+        player1PosY -= 8
+    if pygame.key.get_pressed()[K_s] and player1PosY < 380:
+        player1PosY += 8
+    if pygame.key.get_pressed()[K_a] and playerPos1X > 31:
+        playerPos1X -= 8
+    if pygame.key.get_pressed()[K_d] and playerPos1X < 600:
+        playerPos1X += 8
         
-    if pygame.key.get_pressed()[K_UP] and Player2Y > 31:
-        Player2Y -= 8
-    if pygame.key.get_pressed()[K_DOWN] and Player2Y < 380:
-        Player2Y += 8    
+    if pygame.key.get_pressed()[K_UP] and player2PosY > 31:
+        player2PosY -= 8
+    if pygame.key.get_pressed()[K_DOWN] and player2PosY < 380:
+        player2PosY += 8    
     
     background = pygame.draw.rect(screen, (129, 120, 255), (0, 20, 640, 440))
     
-    bola = pygame.draw.rect(screen, (255,255,255), (Xbola, Ybola, 20, 20))
+    ball = pygame.draw.rect(screen, (255,255,255), (ballPosX, ballPosY, 20, 20))
     
-    divisoria = pygame.draw.rect(screen, (255,255,255), (width/2, 20, 5, 440))
-    paredeCima = pygame.draw.rect(screen, (255,255,255), (0, 20, 640, 10))
-    paredeBaixo = pygame.draw.rect(screen, (255,255,255), (0, 450, 640, 10))
-    
-    paredeLeft = pygame.draw.rect(screen, (255,255,255), (0, 20, 10, 440))
-    paredeRight = pygame.draw.rect(screen, (255,255,255), (width-10, 20, 10, 440))
-    
-    player1 = pygame.draw.rect(screen, (0,0,255), (Player1X, Player1Y, 20, 70))
-    player2 = pygame.draw.rect(screen, (255,0,0), (width - 60, Player2Y, 20, 70))
-        
-    if bola.colliderect(paredeLeft):
-        scorePlayer2+=1
-        Xbola = width/2
-        Ybola = height/2
-        Vxbola = abs(Vxbola)
-    if bola.colliderect(paredeRight):
-        scorePlayer1+=1
-        Xbola = width/2
-        Ybola = height/2
-        Vxbola = -abs(Vxbola)
-        
-    if bola.colliderect(paredeCima) or bola.colliderect(paredeBaixo):
-        Vybola = -Vybola
+    divider = pygame.draw.rect(screen, (255,255,255), (screenWidth/2, 20, 5, 440))
 
-    if bola.colliderect(player1) or bola.colliderect(player2):
-        Vxbola = -Vxbola
+    upperBoundary = pygame.draw.rect(screen, (255,255,255), (0, 20, 640, 10))
+    bottomBoundary = pygame.draw.rect(screen, (255,255,255), (0, 450, 640, 10))
+    leftBoundary = pygame.draw.rect(screen, (255,255,255), (0, 20, 10, 440))
+    rightBoundary = pygame.draw.rect(screen, (255,255,255), (screenWidth-10, 20, 10, 440))
+    
+    player1 = pygame.draw.rect(screen, (0,0,255), (playerPos1X, player1PosY, 20, 70))
+    player2 = pygame.draw.rect(screen, (255,0,0), (screenWidth - 60, player2PosY, 20, 70))
         
-    Xbola += Vxbola
-    Ybola += Vybola
-    
-    
+    if ball.colliderect(leftBoundary):
+        scorePlayer2 += 1
+        ballPosX = screenWidth/2
+        ballPosY = screenHeight/2
+        ballSpeedX = abs(ballSpeedX)
+    if ball.colliderect(rightBoundary):
+        scorePlayer1+=1
+        ballPosX = screenWidth/2
+        ballPosY = screenHeight/2
+        ballSpeedX = -abs(ballSpeedX)
+        
+    if ball.colliderect(upperBoundary) or ball.colliderect(bottomBoundary):
+        ballSpeedY = -ballSpeedY
+
+    if ball.colliderect(player1) or ball.colliderect(player2):
+        ballSpeedX = -ballSpeedX
+        
+    ballPosX += ballSpeedX
+    ballPosY += ballSpeedY
+
     screen.blit(text1, [20, 40])
     screen.blit(text2, [490, 40])
     pygame.display.flip()
