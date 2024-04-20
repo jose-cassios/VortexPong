@@ -8,11 +8,13 @@ pygame.font.init()
 pygame.mixer.init() 
 
 mainDirectory = os.path.dirname(__file__)
-musicDirectory = os.path.join(mainDirectory, 'Sounds/music')
+musicDirectory = os.path.join(mainDirectory, 'sounds/music')
 fontsDirectory = os.path.join(mainDirectory, 'fonts')
 
-pygame.mixer.music.load(os.path.join(musicDirectory, 'flowermusic.mp3'))
-pygame.mixer.music.play()
+backgroundMusic = pygame.mixer.music
+backgroundMusic.load(os.path.join(musicDirectory, 'user.mp3'))
+backgroundMusic.set_volume(0.5)
+backgroundMusic.play()
 
 screenWidth = 640
 screenHeight = 480
