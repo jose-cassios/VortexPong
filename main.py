@@ -10,12 +10,42 @@ class VectorPosition():
         self.y = y
         pass
 
+    def addX(self, x: int) -> None:
+        self.x += x
+
+    def addY(self, y: int) -> None:
+        self.y += y
+
+    def subX(self, x: int) -> None:
+        self.x -= x
+
+    def subY(self, y: int) -> None:
+        self.y -= y
+
+    def setX(self, x: int) -> None:
+        self.x = x
+
+    def setY(self, y: int) -> None:
+        self.y = y
+
+    def getX(self) -> int:
+        return self.x
+
+    def getY(self) -> int:
+        return self.y
+
 
 class ButtonUpDown():
-    def __init__(self, up, dawn) -> None:
+    def __init__(self, up, down) -> None:
         self.up = up
-        self.dawn = dawn
+        self.down = down
         pass
+
+    def getUp(self):
+        return self.up
+
+    def getDown(self):
+        return self.down
 
 
 class Player():
@@ -32,11 +62,22 @@ class Player():
         pass
 
     def move(self) -> None:
-        if self.pyGame.key.get_pressed()[self.controls.up] and self.position.y > 31:
-            self.position.y -= self.speed
-        if self.pyGame.key.get_pressed()[self.controls.dawn] and self.position.y < 380:
-            self.position.y += self.speed
+        if self.pyGame.key.get_pressed()[self.controls.getUp()] and self.position.getY() > 31:
+            self.position.subY(self.speed)
+        if self.pyGame.key.get_pressed()[self.controls.getDown()] and self.position.getY() < 380:
+            self.position.addY(self.speed)
         pass
+
+    def addScore(self, num: int) -> None:
+        self.score += num
+        pass
+
+    def subScore(self, num: int) -> None:
+        self.score -= num
+        pass
+
+    def getPosi(self) -> VectorPosition:
+        return self.position
 
 
 # Initializing the basic pygame modules
@@ -134,22 +175,22 @@ while True:
 
     # Draw players and the ball
     player1 = pygame.draw.rect(
-        screen, (0, 0, 255), (40, playerClass1.position.y, 20, 70))
+        screen, (0, 0, 255), (40, playerClass1.getPosi().getY(), 20, 70))
     player2 = pygame.draw.rect(
-        screen, (255, 0, 0), (screenWidth - 60, playerClass2.position.y, 20, 70))
+        screen, (255, 0, 0), (screenWidth - 60, playerClass2.getPosi().getY(), 20, 70))
     ball = pygame.draw.rect(screen, (255, 255, 255),
                             (ballPosX, ballPosY, 20, 20))
 
     # Collision detection and handling
     if ball.colliderect(leftBoundary):
         scoreSFX.play()
-        playerClass2.score += 1
+        playerClass2.addScore(1)
         ballPosX = screenWidth/2
         ballPosY = screenHeight/2
         ballSpeedX = abs(ballSpeedX)
     if ball.colliderect(rightBoundary):
         scoreSFX.play()
-        playerClass1.score += 1
+        playerClass1.addScore(1)
         ballPosX = screenWidth/2
         ballPosY = screenHeight/2
         ballSpeedX = -abs(ballSpeedX)
