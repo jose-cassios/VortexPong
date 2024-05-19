@@ -1,5 +1,6 @@
 import pygame
 import os
+from entities import *
 
 class Game:
     def __init__(self, assets: dict):
@@ -35,7 +36,9 @@ class Game:
 
     def init_game_objects(self):
         # Initialize players, ball, scoreboard, etc.
-        pass
+        self.player1 = Player(x=20, y=350, width=10, height=30, speed=5)
+        self.player2 = Player(x=600, y=350, width=10, height=30, speed=5)
+
 
     def run(self):
         while True:
@@ -51,9 +54,12 @@ class Game:
 
     def update_game_state(self):
         # Update positions of players, ball, check collisions, etc.
-        pass
+        self.player1.move(pygame.K_w, pygame.K_UP)
+        self.player2.move(pygame.K_u, pygame.K_DOWN)
 
     def render(self):
+        self.clock.tick(60)
         self.screen.fill((0, 0, 0))
-        # Draw players, ball, scoreboard, etc.
+        self.player1.draw(self.screen)
+        self.player2.draw(self.screen)
         pygame.display.flip()
