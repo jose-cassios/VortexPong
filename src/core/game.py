@@ -66,9 +66,15 @@ class Game:
 
     def update_game_state(self):
         # Update positions of players, ball, check collisions, etc.
-        self.player1.move(pygame.K_w, pygame.K_s)
-        self.player2.move(pygame.K_UP, pygame.K_DOWN)
+        self.player1.move(pygame.K_w, pygame.K_s, self.screen_height)
+        self.player2.move(pygame.K_UP, pygame.K_DOWN, self.screen_height)
         self.ball.move(self.screen_width, self.screen_height)
+        # Movimento e colisão da bola
+        self.ball.move(self.screen_width, self.screen_height)
+
+        # Colisão com jogadores
+        if self.ball.rect.colliderect(self.player1.rect) or self.ball.rect.colliderect(self.player2.rect):
+            self.ball.speed_x *= -1
 
     def render(self):
         self.clock.tick(60)

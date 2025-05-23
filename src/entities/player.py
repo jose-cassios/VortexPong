@@ -12,11 +12,11 @@ class Player:
             self.sprite = sprite_sheet.subsurface(sprite_rect)
             self.sprite = pygame.transform.scale(self.sprite, (width, height))
 
-    def move(self, up, down):
+    def move(self, up, down, screen_height):
         keys = pygame.key.get_pressed()
-        if keys[up]:
+        if keys[up] and self.rect.top > -20:
             self.rect.y -= self.speed
-        if keys[down]:
+        if keys[down] and self.rect.bottom < screen_height + 20:
             self.rect.y += self.speed
 
     def draw(self, screen):
