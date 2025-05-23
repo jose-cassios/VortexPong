@@ -1,7 +1,6 @@
 import pygame
 import os
 from entities import *
-
 class Game:
     def __init__(self, assets: dict):
         self.assets = assets
@@ -35,10 +34,19 @@ class Game:
         self.custom_font = pygame.font.Font(font_path, font_size)
 
     def init_game_objects(self):
-        # Initialize players, ball, scoreboard, etc.
-        self.player1 = Player(x=20, y=350, width=10, height=30, speed=5)
-        self.player2 = Player(x=600, y=350, width=10, height=30, speed=5)
+        sprite_path = os.path.join(self.assets['IMAGES_DIR'], 'paddles', 'sprites.png')
+        bg_path = os.path.join(self.assets['IMAGES_DIR'], 'backgrounds', 'bg.png')
+        self.background = pygame.image.load(bg_path).convert()
+        self.background = pygame.transform.scale(self.background, (self.screen_width, self.screen_height))
 
+        # Definindo as regiões do sprite (conforme imagem que você enviou)
+        sprite_vermelho = pygame.Rect(0, 0, 45, 150)
+        sprite_azul = pygame.Rect(45, 0, 45, 150)
+        ball_sprite = pygame.Rect(90, 0, 60, 50)
+
+        self.ball = Ball(x=self.screen_width//2 - 22, y=self.screen_height//2 - 22, speed_x=4, speed_y=4, image_path=sprite_path, sprite_rect=ball_sprite)
+        self.player1 = Player(x=20, y=150, width=45, height=150, speed=5, image_path=sprite_path, sprite_rect=sprite_azul)
+        self.player2 = Player(x=575, y=150, width=45, height=150, speed=5, image_path=sprite_path, sprite_rect=sprite_vermelho)
 
     def run(self):
         while True:
@@ -51,15 +59,22 @@ class Game:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+            elif event.type == pygame.VIDEORESIZE:
+                self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                self.screen_width, self.screen_height = event.w, event.h
+                self.background = pygame.transform.scale(self.background, (self.screen_width, self.screen_height))
 
     def update_game_state(self):
         # Update positions of players, ball, check collisions, etc.
-        self.player1.move(pygame.K_w, pygame.K_UP)
-        self.player2.move(pygame.K_u, pygame.K_DOWN)
+        self.player1.move(pygame.K_w, pygame.K_s)
+        self.player2.move(pygame.K_UP, pygame.K_DOWN)
+        self.ball.move(self.screen_width, self.screen_height)
 
     def render(self):
         self.clock.tick(60)
-        self.screen.fill((0, 0, 0))
+        # Inverter o background abaixo
+        self.screen.blit(pygame.transform.flip(self.background, True, False), (0, 0))
         self.player1.draw(self.screen)
         self.player2.draw(self.screen)
+        self.ball.draw(self.screen)
         pygame.display.flip()
