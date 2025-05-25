@@ -9,8 +9,22 @@ class Player:
         self.sprite = None
         if image_path and sprite_rect:
             sprite_sheet = pygame.image.load(image_path).convert_alpha()
-            self.sprite = sprite_sheet.subsurface(sprite_rect)
-            self.sprite = pygame.transform.scale(self.sprite, (width, height))
+            raw_sprite = sprite_sheet.subsurface(sprite_rect)
+
+            # Redimensiona para o tamanho do paddle
+            scaled_sprite = pygame.transform.scale(raw_sprite, (width, height))
+
+            # Cria uma superfície com transparência
+            self.sprite = pygame.Surface((width, height), pygame.SRCALPHA)
+
+            # Cria uma máscara retangular com cantos arredondados
+            mask = pygame.Surface((width, height), pygame.SRCALPHA)
+            pygame.draw.rect(mask, (255, 255, 255, 255), mask.get_rect(), border_radius=12)
+
+            # Aplica a imagem sobre a máscara com blending
+            self.sprite.blit(mask, (0, 0))
+            self.sprite.blit(scaled_sprite, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+
 
     def move(self, up, down, screen_height):
         keys = pygame.key.get_pressed()

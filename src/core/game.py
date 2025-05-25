@@ -38,16 +38,47 @@ class Game:
         bg_path = os.path.join(self.assets['IMAGES_DIR'], 'backgrounds', 'bg.png')
         self.background = pygame.image.load(bg_path).convert()
         self.background = pygame.transform.scale(self.background, (self.screen_width, self.screen_height))
+            
+        paddle_width = self.screen_width // 64
+        paddle_height = self.screen_height // 6
+        ball_size = self.screen_height // 12
+        speed = self.screen_height // 96
 
-        # Definindo as regiões do sprite (conforme imagem que você enviou)
+        # Corrigido: regiões dos sprites
         sprite_vermelho = pygame.Rect(0, 0, 45, 150)
         sprite_azul = pygame.Rect(45, 0, 45, 150)
-        ball_sprite = pygame.Rect(90, 0, 60, 50)
+        sprite_bola = pygame.Rect(100, 0, 50, 50)
 
-        self.ball = Ball(x=self.screen_width//2 - 22, y=self.screen_height//2 - 22, speed_x=4, speed_y=4, image_path=sprite_path, sprite_rect=ball_sprite)
-        self.player1 = Player(x=20, y=150, width=45, height=150, speed=5, image_path=sprite_path, sprite_rect=sprite_azul)
-        self.player2 = Player(x=575, y=150, width=45, height=150, speed=5, image_path=sprite_path, sprite_rect=sprite_vermelho)
+        self.player1 = Player(
+            x=self.screen_width // 32,
+            y=self.screen_height // 2 - paddle_height // 2,
+            width=paddle_width,
+            height=paddle_height,
+            speed=speed,
+            image_path=sprite_path,
+            sprite_rect=sprite_vermelho
+        )
 
+        self.player2 = Player(
+            x=self.screen_width - self.screen_width // 32 - paddle_width,
+            y=self.screen_height // 2 - paddle_height // 2,
+            width=paddle_width,
+            height=paddle_height,
+            speed=speed,
+            image_path=sprite_path,
+            sprite_rect=sprite_azul
+        )
+
+        self.ball = Ball(
+            x=self.screen_width // 2 - ball_size // 2,
+            y=self.screen_height // 2 - ball_size // 2,
+            speed_x=speed,
+            speed_y=speed,
+            image_path=sprite_path,
+            sprite_rect=sprite_bola
+        )
+
+        
     def run(self):
         while True:
             self.handle_events()

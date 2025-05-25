@@ -7,8 +7,18 @@ class Ball:
         self.speed_x = speed_x
         self.speed_y = speed_y
 
-        self.image = pygame.image.load(image_path).convert_alpha()
-        self.sprite = self.image.subsurface(sprite_rect)
+        # Carrega o sprite completo da imagem
+        full_image = pygame.image.load(image_path).convert_alpha()
+        ball_sprite = full_image.subsurface(sprite_rect)
+
+        # Cria uma superfície circular com fundo transparente
+        self.sprite = pygame.Surface((sprite_rect.width, sprite_rect.height), pygame.SRCALPHA)
+        radius = sprite_rect.width // 2
+
+        # Cria uma máscara circular e aplica à sprite original
+        pygame.draw.circle(self.sprite, (255, 255, 255, 255), (radius, radius), radius)
+        self.sprite.blit(ball_sprite, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+
 
     def move(self, screen_width, screen_height):
         self.rect.x += self.speed_x
